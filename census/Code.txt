@@ -1,0 +1,39 @@
+# The following gets left side of the Data Dictionary
+DataDictLines <- readLines("DataDict.txt")
+line <- DataDictLines[3]
+strsplit(line, " ")
+length(splitString[[1]])
+stringLength <- length(splitString[[1]])
+validStrings <- splitString[[1]][1:stringLength] != ""
+reducedString <- splitString[[1]][validStrings]
+rsl <- length(reducedString)
+delimitedFields <- reducedString[c(1,(rsl-5),(rsl-4),(rsl-3),(rsl-2),(rsl-1),(rsl))]
+ItemDescriptionWidth <- nchar(line) - sum(nchar(delimitedFields))-17
+othrW <- nchar(delimitedFields)
+w <- c(othrW[1], ItemDescriptionWidth ,othrW[2], othrW[3], othrW[4], othrW[5], othrW[6], othrW[7])
+DataDict <- read.fwf("DataDict.txt", width = w, header=FALSE)
+I_D = data.frame(DataDict[1], DataDict[2])
+
+
+# Getting The other side of the Data (Unit, Decimal, Minimum, Maximum, Source)
+splitDataDict <- strsplit(DataDictLines[3:length(DataDictLines)], " ")
+total_rows <- length(splitDataDict)
+reduced <- lapply(splitDataDict,function(x){x[x != ""]})
+endFields <- fieldslapply(reduced, function(x){x[c(length(x)-5,length(x)-4,length(x)-3,length(x)-2,length(x)-1,length(x))]})
+Unit <- lapply(endFields, function(x){x[[1]]})
+Decimal <- lapply(endFields, function(x){x[[2]]})
+US_Total <- lapply(endFields, function(x){x[[3]]})
+Minimum <- lapply(endFields, function(x){x[[4]]})
+Maximum <- lapply(endFields, function(x){x[[5]]})
+Source <- lapply(endFields, function(x){x[[6]]})
+
+# Reading Lines Out of Fips
+FIPS <- readlines
+# to get the first Identifier
+code <- lapply(FIPS, function(x){substr(x, 1,5)})
+# to get the other half with the state abrieviation
+# count/state
+maxLength <- max(nchar(FIPS))
+countyState <- lapply(FIPS, function(x){substr(x, 7, maxLength)})
+
+
